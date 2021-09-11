@@ -1,3 +1,4 @@
+//####################### Library #######################
 /* Sources:
  *   Morse codes table: https://morsedecoder.com/fr/
  *   Codes of the Morse tenses: https://www.codebug.org.uk/learn/step/541/morse-code-timing-rules/
@@ -112,3 +113,4 @@ void led(int outputPin, int wait, boolean all) {
   if (all) delay(wait);
   else delay(duration);
 }
+//####################### Library #######################
