@@ -91,7 +91,7 @@ String morseToString(String morseText, boolean convertUnrecognizedUharacters) {
  * The '#' character is considered an unrecognized character. (add when converting to Morse code)
  * If the program encounters a character other than '.', '-', '_', ' ', '/', '#', it will stop.
  */
-void runMorse(String morseText) { runMorse(morseText, 13); }
+void runMorse(String morseText) { runMorse(morseText, LED_BUILTIN); }
 void runMorse(String morseText, int outputPin) {
   char text[morseText.length()+1];
   morseText.toCharArray(text, morseText.length()+1);
