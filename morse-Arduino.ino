@@ -1,4 +1,8 @@
-// Morse codes table: https://morsedecoder.com/fr/
+/* Sources:
+ *   Morse codes table: https://morsedecoder.com/fr/
+ *   Codes of the Morse tenses: https://www.codebug.org.uk/learn/step/541/morse-code-timing-rules/
+ */
+
 char asciiTable[] = {
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
   'À', 'Â', 'Æ', 'Ç', 'È', 'Ë', 'É', 'Ê', 'Ï', 'Ô', 'Ü', 'Ù', 
@@ -11,8 +15,12 @@ String morseTable[] = {
   "-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.", 
   "/", "-.-.--", "--..--","..--..", ".-.-.-", ".----.", "-..-.", "-.--.", "-.--.-", ".-...", "---...", "-.-.-.", "-...-", ".-.-.", "-....-", "..--.-", ".-..-.", "...-..-", ".--.-.", "..-.-", "--...-"
 };
-#define duration 200
+int duration = 200;
 
+// Modifies the duration of one 'time'. (default: 200ms)
+void setTimeDuration(int _duration) {
+  duration = _duration;
+}
 
 /* Convert a text in morse code.
  * If one character is not present in 'asciiTable':
@@ -87,7 +95,7 @@ void runMorse(String morseText, int outputPin) {
   for (char morse : text) {
     if (morse == '.') led(outputPin, duration);
     else if (morse == '-' || morse == '_') led(outputPin, duration*3);
-    else if (morse == ' ') delay(duration*5);
+    else if (morse == ' ') delay(duration*3);
     else if (morse == '/') delay(duration*7);
     else if (morse == '#') continue;
     else return;
@@ -102,5 +110,5 @@ void led(int outputPin, int wait, boolean all) {
   delay(wait);
   digitalWrite(outputPin, LOW);
   if (all) delay(wait);
-  else delay(duration*3);
+  else delay(duration);
 }
