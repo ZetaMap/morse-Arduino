@@ -2,6 +2,9 @@
 /* Sources:
  *   Morse codes table: https://morsedecoder.com/fr/
  *   Codes of the Morse tenses: https://www.codebug.org.uk/learn/step/541/morse-code-timing-rules/
+ *
+ * Create by Susideur.
+ * My github: https://github.com/Susideur
  */
 
 char asciiTable[] = {
