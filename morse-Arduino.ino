@@ -2,8 +2,9 @@
 /* Sources:
  *   Morse codes table: https://morsedecoder.com/fr/
  *   Codes of the Morse tenses: https://www.codebug.org.uk/learn/step/541/morse-code-timing-rules/
- *
+ *   
  * Create by Susideur.
+ * Github project: https://github.com/Susideur/morse-Arduino
  * My github: https://github.com/Susideur
  */
 
@@ -45,6 +46,7 @@ String stringToMorse(String text, boolean convertUnrecognizedUharacters) {
     for (int i=0; i<sizeof(asciiTable); i++) {
       if (letter == asciiTable[i]) {
         output += morseTable[i]+" ";
+        found = true;
         break;
       }
     }
