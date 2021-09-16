@@ -4,118 +4,131 @@
  *   Codes of the Morse tenses: https://www.codebug.org.uk/learn/step/541/morse-code-timing-rules/
  *   
  * Create by Susideur.
- * Github project: https://github.com/Susideur/morse-Arduino
- * My github: https://github.com/Susideur
+ * Github project: https://github.com/ZetaMap/morse-Arduino
+ * My github: https://github.com/ZetaMap
  */
 
-char asciiTable[] = {
+const char characterTable[69] = {
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
   'À', 'Â', 'Æ', 'Ç', 'È', 'Ë', 'É', 'Ê', 'Ï', 'Ô', 'Ü', 'Ù', 
   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
   ' ', '!', ',', '?', '.', '\'' , '/', '(', ')', '&', ':', ';', '=', '+', '-', '_', '"', '$', '@', '¿', '¡'
 };
-String morseTable[] = {
+const String morseTable[69] = {
   ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..",
   ".--.-", ".--.-", ".-.-", "-.-..", ".-..-", "..-..", "..-.." ,"-..-.", "-..--", "---.", "..--", "..--", 
   "-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.", 
   "/", "-.-.--", "--..--","..--..", ".-.-.-", ".----.", "-..-.", "-.--.", "-.--.-", ".-...", "---...", "-.-.-.", "-...-", ".-.-.", "-....-", "..--.-", ".-..-.", "...-..-", ".--.-.", "..-.-", "--...-"
 };
-int duration = 200;
+int DURATION = 200;
 
 // Modifies the duration of one 'time'. (default: 200ms)
-void setTimeDuration(int _duration) {
-  duration = _duration;
+void setTimeDURATION(const int duration) {
+  DURATION = duration;
 }
 
 /* Convert a text in morse code.
- * If one character is not present in 'asciiTable':
- *   If convertUnrecognizedUharacters=false: it will be ignored.
+ * If one character is not present in 'characterTable':
+ *   If convertUnrecognizedCharacters=false: it will be ignored.
  *   Else: it will be replace with '#'.
  */
-String stringToMorse(String text) { stringToMorse(text, true); }
-String stringToMorse(String text, boolean convertUnrecognizedUharacters) {
+String stringToMorse(const String text) { stringToMorse(text, true); }
+String stringToMorse(const String text, const boolean convertUnrecognizedCharacters) {
   String output = "";
-  char newText[text.length()+1];
-  text.toUpperCase();
-  text.toCharArray(newText, text.length()+1);
+  char character;
   boolean found;
   
-  for (char letter : newText) {
+  for (int i=0; i<text.length(); i++) {
+    character = text[i];
     found = false;
     
-    for (int i=0; i<sizeof(asciiTable); i++) {
-      if (letter == asciiTable[i]) {
-        output += morseTable[i]+" ";
+    for (int ii=0; ii<69; ii++) {
+      if (character == characterTable[ii]) {
+        output += morseTable[ii]+" ";
         found = true;
         break;
       }
     }
-    if (!found && convertUnrecognizedUharacters) output += "#";
+    if (!found && convertUnrecognizedCharacters) output += "#";
   }
-  return output.endsWith(" ") ? output.substring(output.length()-1) : output;
+
+  return output.endsWith(" ") ? output.substring(0, output.length()-1) : output;
 }
 
 /* Convert a morse code in text.
- * If one character is not present in 'asciiTable':
- *   If convertUnrecognizedUharacters=false: it will be ignored.
+ * If one morse code is not present in 'morseTable':
+ *   If convertUnrecognizedMorseCode=false: it will be ignored.
  *   Else: it will be replace with '#'.
+ * If the program encounters a character other than '.', '-', '_', ' ', '/', and '#', it will print an error and return the text already converted.
  */
-String morseToString(String morseText) { morseToString(morseText, true); }
-String morseToString(String morseText, boolean convertUnrecognizedUharacters) {
+String morseToString(const String morseText) { morseToString(morseText, true); }
+String morseToString(const String morseText, const boolean convertUnrecognizedMorseCode) {
   String output = "";
-  String newText[] = {};
-  int index = morseText.indexOf(' ');
-  int textSize = morseText.length();
+  String morse = "";
+  char character;
   boolean found;
   
-  while (index != -1) {
-    index = morseText.indexOf(' ');
-    newText[sizeof(newText)] = morseText.substring(index);
-    morseText = morseText.substring(index+1, textSize);
-  }
+  for (int i=0; i<morseText.length(); i++) {
+    character = morseText[i];
 
-  for (String morse : newText) {
-    found = false;
+    if (character == '.'|| character == '-'|| character == '_') {
+      morse += character;
+      
+    } else if (character == '/') {
+      output += " ";
+      
+    } else if (character == ' ') {
+      found = false;
     
-    for (int i=0; i<sizeof(morseTable)/sizeof(morseTable[0]); i++) {
-      if (morse == morseTable[i]) {
-        output += asciiTable[i];
-        found = true;
-        break;
+      for (int ii=0; i<69; ii++) {
+        if (morse == morseTable[ii]) {
+          output += characterTable[ii];
+          found = true;
+          break;
+        }
       }
+      if (!found && convertUnrecognizedMorseCode) output += "#";
+      morse = "";
+      
+    } else if (character != '#') {
+      Serial.println("Error: unknown character '"+String(character)+"'");
+      break;
     }
-    if (!found && convertUnrecognizedUharacters) output += "#";
   }
   return output;
 }
 
-/* Cut and run a morse code on a given pin (Led, Speaker, etc) according to the codes of the Morse tenses.
+/* Cut and run a morse code on a given pin (bip, Speaker, etc) according to the codes of the Morse tenses.
  * The '#' character is considered an unrecognized character. (add when converting to Morse code)
- * If the program encounters a character other than '.', '-', '_', ' ', '/', '#', it will stop.
+ * If the program encounters a character other than '.', '-', '_', ' ', '/', and '#', it will print an error and stop.
  */
-void runMorse(String morseText) { runMorse(morseText, LED_BUILTIN); }
-void runMorse(String morseText, int outputPin) {
-  char text[morseText.length()+1];
-  morseText.toCharArray(text, morseText.length()+1);
+void runMorse(const String morseText) { runMorse(morseText, LED_BUILTIN); }
+void runMorse(const String morseText, const int outputPin) {
+  char morse;
 
-  for (char morse : text) {
-    if (morse == '.') led(outputPin, duration);
-    else if (morse == '-' || morse == '_') led(outputPin, duration*3);
-    else if (morse == ' ') delay(duration*3);
-    else if (morse == '/') delay(duration*7);
+  for (int i=0; i<morseText.length(); i++) {
+    morse = morseText[i];
+    
+    if (morse == '.') bip(outputPin, DURATION);
+    else if (morse == '-' || morse == '_') bip(outputPin, DURATION*3);
+    else if (morse == ' ') delay(DURATION*3);
+    else if (morse == '/') delay(DURATION*7);
     else if (morse == '#') continue;
-    else return;
+    else {
+      Serial.println("Error while printing character: "+morse);
+      return;
+    }
   }
-  for (int i=0; i<5; i++) led(outputPin, 100, true);
+  for (int i=0; i<5; i++) bip(outputPin, 100, true);
 }
 
 // Please don't use this method, it just for the program.
-void led(int outputPin, int wait) { led(outputPin, wait, false); }
-void led(int outputPin, int wait, boolean all) {
+void bip(int outputPin, int wait) { bip(outputPin, wait, false); }
+void bip(int outputPin, int wait, boolean all) {
   digitalWrite(outputPin, HIGH);
   delay(wait);
   digitalWrite(outputPin, LOW);
   if (all) delay(wait);
-  else delay(duration);
+  else delay(DURATION);
 }
 //####################### Library #######################
