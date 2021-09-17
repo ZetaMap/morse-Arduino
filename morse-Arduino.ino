@@ -123,7 +123,7 @@ void runMorse(const String morseText, const int outputPin) {
   }
   
   delay(DURATION*3);
-  for (int i=0; i<5; i++) bip(outputPin, 100, true);
+  for (int i=0; i<5; i++) bip(outputPin, (int) DURATION/2, true);
 }
 
 // Please don't use this method, it just for the program.
