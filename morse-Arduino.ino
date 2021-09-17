@@ -3,18 +3,18 @@
  *   Morse codes table: https://morsedecoder.com/fr/
  *   Codes of the Morse tenses: https://www.codebug.org.uk/learn/step/541/morse-code-timing-rules/
  *   
- * Create by Susideur.
+ * Create by ZetaMap.
  * Github project: https://github.com/ZetaMap/morse-Arduino
  * My github: https://github.com/ZetaMap
  */
 
-const char characterTable[69] = {
+static char characterTable[] = {
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
   'À', 'Â', 'Æ', 'Ç', 'È', 'Ë', 'É', 'Ê', 'Ï', 'Ô', 'Ü', 'Ù', 
   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
   ' ', '!', ',', '?', '.', '\'' , '/', '(', ')', '&', ':', ';', '=', '+', '-', '_', '"', '$', '@', '¿', '¡'
 };
-const String morseTable[69] = {
+static String morseTable[] = {
   ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..",
   ".--.-", ".--.-", ".-.-", "-.-..", ".-..-", "..-..", "..-.." ,"-..-.", "-..--", "---.", "..--", "..--", 
   "-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.", 
@@ -22,21 +22,22 @@ const String morseTable[69] = {
 };
 int DURATION = 200;
 
-// Modifies the duration of one 'time'. (default: 200ms)
+/* Modifies the duration of one 'time'. (default: 200ms)*/
 void setTimeDURATION(const int duration) {
   DURATION = duration;
 }
 
-/* Convert a text in morse code.
+/* Convert a text in morse code. 
  * If one character is not present in 'characterTable':
  *   If convertUnrecognizedCharacters=false: it will be ignored.
  *   Else: it will be replace with '#'.
  */
-String stringToMorse(const String text) { stringToMorse(text, true); }
-String stringToMorse(const String text, const boolean convertUnrecognizedCharacters) {
+String stringToMorse(String text) { return stringToMorse(text, true); }
+String stringToMorse(String text, const boolean convertUnrecognizedCharacters) {
   String output = "";
   char character;
   boolean found;
+  text.toUpperCase();
   
   for (int i=0; i<text.length(); i++) {
     character = text[i];
@@ -51,7 +52,6 @@ String stringToMorse(const String text, const boolean convertUnrecognizedCharact
     }
     if (!found && convertUnrecognizedCharacters) output += "#";
   }
-
   return output.endsWith(" ") ? output.substring(0, output.length()-1) : output;
 }
 
@@ -61,8 +61,9 @@ String stringToMorse(const String text, const boolean convertUnrecognizedCharact
  *   Else: it will be replace with '#'.
  * If the program encounters a character other than '.', '-', '_', ' ', '/', and '#', it will print an error and return the text already converted.
  */
-String morseToString(const String morseText) { morseToString(morseText, true); }
-String morseToString(const String morseText, const boolean convertUnrecognizedMorseCode) {
+String morseToString(String morseText) { return morseToString(morseText, true); }
+String morseToString(String morseText, const boolean convertUnrecognizedMorseCode) {
+  morseText += " ";
   String output = "";
   String morse = "";
   char character;
@@ -79,19 +80,20 @@ String morseToString(const String morseText, const boolean convertUnrecognizedMo
       
     } else if (character == ' ') {
       found = false;
-    
-      for (int ii=0; i<69; ii++) {
+
+      for (int ii=0; ii<69; ii++) {
         if (morse == morseTable[ii]) {
           output += characterTable[ii];
           found = true;
           break;
         }
       }
+      
       if (!found && convertUnrecognizedMorseCode) output += "#";
       morse = "";
       
     } else if (character != '#') {
-      Serial.println("Error: unknown character '"+String(character)+"'");
+      Serial.println("Error: unknown morse character '"+String(character)+"'");
       break;
     }
   }
@@ -119,6 +121,8 @@ void runMorse(const String morseText, const int outputPin) {
       return;
     }
   }
+  
+  delay(DURATION*3);
   for (int i=0; i<5; i++) bip(outputPin, 100, true);
 }
 
