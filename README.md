@@ -36,4 +36,10 @@ You just need to copy/paste this program at the start of your script.<br>
       
   * **runMorse**
     * Parameters: **morseText**, **outputPin (optional)[default: LED_BUILTIN]**, **frequency (optional)[default: -1]**
+    * Description: Cut and run a morse code on a given pin (led, speaker, motor, etc) according to the codes of the Morse tenses. <br>
+      The '#' character is considered an unrecognized character. (add when converting to Morse code) <br>
+      If the program encounters a character other than '.', '-', '_', ' ', '/', and '#', it will print an error and stop. <br>
       
+  * **runMorseHz**
+    * Parameters: **morseText**, **frequency**, **outputPin (optional)[default: LED_BUILTIN]**
+    * Description: Same as 'runMorse()', this function asks for the output frequency, in addition.
