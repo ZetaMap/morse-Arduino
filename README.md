@@ -3,5 +3,17 @@ A small program which allows to convert a text into Morse code and conversely. A
 You just need to copy/paste this program at the start of your script.<br>
 
 ### Sources
+
 * Morse codes table: https://morsedecoder.com/fr/
 * Codes of the Morse tenses: https://www.codebug.org.uk/learn/step/541/morse-code-timing-rules/
+
+### Content
+
+* Constants and Variables:
+  * **characterTable**: The list of all the characters recognized by the program 
+  * **morseTable**: The list of Morse codes associated with recognized characters
+  * **DURATION**: The duration of one time (by default: 200ms)
+
+* Methods:
+  * **setTimeDuration**
+    * ll
