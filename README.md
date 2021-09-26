@@ -21,7 +21,7 @@ You just need to copy/paste this program at the start of your script.<br>
 
   * **textToMorse**
     * Parameters: **text**, **convertUnrecognizedCharacters** (optional)
-    * Description: Convert a text in morse code. 
-        If one character is not present in 'characterTable':
-          If convertUnrecognizedCharacters=false: it will be ignored.
-          Else: it will be replace with '#'.
+    * Description: Convert a text in morse code. <br>
+        If one character is not present in 'characterTable': <br>
+          If convertUnrecognizedCharacters=false: it will be ignored. <br>
+          Else: it will be replace with '#'. <br>
