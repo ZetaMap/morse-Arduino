@@ -32,8 +32,8 @@ void setTimeDURATION(const int duration) {
  *   If convertUnrecognizedCharacters=false: it will be ignored.
  *   Else: it will be replace with '#'.
  */
-String stringToMorse(String text) { return stringToMorse(text, true); }
-String stringToMorse(String text, const boolean convertUnrecognizedCharacters) {
+String textToMorse(String text) { return textToMorse(text, true); }
+String textToMorse(String text, const boolean convertUnrecognizedCharacters) {
   String output = "";
   char character;
   boolean found;
@@ -61,8 +61,8 @@ String stringToMorse(String text, const boolean convertUnrecognizedCharacters) {
  *   Else: it will be replace with '#'.
  * If the program encounters a character other than '.', '-', '_', ' ', '/', and '#', it will print an error and return the text already converted.
  */
-String morseToString(String morseText) { return morseToString(morseText, true); }
-String morseToString(String morseText, const boolean convertUnrecognizedMorseCode) {
+String morseToText(String morseText) { return morseToText(morseText, true); }
+String morseToText(String morseText, const boolean convertUnrecognizedMorseCode) {
   morseText += " ";
   String output = "";
   String morse = "";
@@ -100,19 +100,21 @@ String morseToString(String morseText, const boolean convertUnrecognizedMorseCod
   return output;
 }
 
+
 /* Cut and run a morse code on a given pin (bip, Speaker, etc) according to the codes of the Morse tenses.
  * The '#' character is considered an unrecognized character. (add when converting to Morse code)
  * If the program encounters a character other than '.', '-', '_', ' ', '/', and '#', it will print an error and stop.
  */
-void runMorse(const String morseText) { runMorse(morseText, LED_BUILTIN); }
-void runMorse(const String morseText, const int outputPin) {
+void runMorse(const String morseText) { runMorse(morseText, LED_BUILTIN, -1); }
+void runMorse(const String morseText, const int outputPin) { runMorse(morseText, outputPin, -1); }
+void runMorse(const String morseText, const int outputPin, const int frequency) {
   char morse;
 
   for (int i=0; i<morseText.length(); i++) {
     morse = morseText[i];
     
-    if (morse == '.') bip(outputPin, DURATION);
-    else if (morse == '-' || morse == '_') bip(outputPin, DURATION*3);
+    if (morse == '.') bip(outputPin, DURATION, frequency, false);
+    else if (morse == '-' || morse == '_') bip(outputPin, DURATION*3, frequency, false);
     else if (morse == ' ') delay(DURATION*3);
     else if (morse == '/') delay(DURATION*7);
     else if (morse == '#') continue;
@@ -121,17 +123,22 @@ void runMorse(const String morseText, const int outputPin) {
       return;
     }
   }
-  
-  delay(DURATION*3);
-  for (int i=0; i<5; i++) bip(outputPin, (int) DURATION/2, true);
+  for (int i=0; i<5; i++) bip(outputPin, 100, frequency, true);
 }
 
-// Please don't use this method, it just for the program.
-void bip(int outputPin, int wait) { bip(outputPin, wait, false); }
-void bip(int outputPin, int wait, boolean all) {
+/* Same as 'runMorse()', this function asks for the output frequency, in addition. */
+void runMorseHz(const String morseText, const int frequency) { runMorse(morseText, LED_BUILTIN, frequency); }
+void runMorseHz(const String morseText, const int outputPin, const int frequency) {
+  runMorse(morseText, outputPin, frequency);
+}
+
+/* Please don't use this method, it just for the program. */
+void bip(int outputPin, int wait, const int frequency, boolean all) {
   digitalWrite(outputPin, HIGH);
+  if (frequency != -1) tone(outputPin, frequency, wait);
   delay(wait);
   digitalWrite(outputPin, LOW);
+  if (frequency != -1) tone(outputPin, frequency, all ? wait : DURATION);
   if (all) delay(wait);
   else delay(DURATION);
 }
