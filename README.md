@@ -23,5 +23,5 @@ You just need to copy/paste this program at the start of your script.<br>
     * Parameters: **text**, **convertUnrecognizedCharacters** (optional)
     * Description: Convert a text in morse code. <br>
         If one character is not present in 'characterTable': <br>
-          .  If convertUnrecognizedCharacters=false: it will be ignored. <br>
-          .  Else: it will be replace with '#'. <br>
+         {.tabset}  If convertUnrecognizedCharacters=false: it will be ignored. <br>
+        {.tabset}  Else: it will be replace with '#'. <br>
