@@ -20,8 +20,17 @@ You just need to copy/paste this program at the start of your script.<br>
     * Description: Modifies the duration of one 'time'. (default: 200ms)
 
   * **textToMorse**
-    * Parameters: **text**, **convertUnrecognizedCharacters** (optional)
+    * Parameters: **text**, **convertUnrecognizedCharacters [default: true]** (optional)
     * Description: Convert a text in morse code. <br>
         If one character is not present in 'characterTable': <br>
-         {.tabset}  If convertUnrecognizedCharacters=false: it will be ignored. <br>
-        {.tabset}  Else: it will be replace with '#'. <br>
+        If convertUnrecognizedCharacters=false: it will be ignored. <br>
+        Else: it will be replace with '#'. <br>
+        
+  * **morseToText**
+    * Parameters: **morseText**, **convertUnrecognizedCode [default: true]** (optional)
+    * Description: Convert a morse code in text. <br>
+      If one morse code is not present in 'morseTable': <br>
+      If convertUnrecognizedCode=false: it will be ignored. <br>
+      Else: it will be replace with '#'. <br>
+      If the program encounters a character other than '.', '-', '_', ' ', '/', and '#', it will print an error and return the text already converted. <br>
+      
